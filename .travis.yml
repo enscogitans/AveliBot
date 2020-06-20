@@ -4,5 +4,5 @@ python:
 before_install:
   - pip install -U pip
 install:
-  - pip install flake8 mypy
-script: flake8 && mypy .
+  - pip install flake8 mypy check-pipfile-lock
+script: flake8 && mypy . && check-pipfile-lock
