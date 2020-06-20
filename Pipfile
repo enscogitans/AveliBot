@@ -1,0 +1,22 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+mypy = "*"
+flake8 = "*"
+flake8-quotes = "*"
+
+[packages]
+aiogram = "*"
+aiohttp-socks = "*"
+alembic = "*"
+aveli-bot = {editable = true, path = "."}
+dateparser = "*"
+envparse = "*"
+gino = "*"
+psycopg2 = "*"
+
+[requires]
+python_version = "3.8"
