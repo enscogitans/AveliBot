@@ -4,17 +4,17 @@ import logging
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Command, Regexp
 
-from models.chat import Chat
+from models import db, Chat
 from utils import utils
 
 
 async def tag_all(message: types.Message) -> None:
     chat = message.chat
-    db_chat = await Chat.get(chat.id)
+    db_chat = db.query(Chat).get(chat.id)
     if db_chat is None:
         logging.error(f"Chat {chat.id} not found in database")
         return
-    known_members = await utils.get_members(db_chat)
+    known_members = db_chat.members
 
     tasks = [chat.get_member(mem.user_id) for mem in known_members]
     members = await asyncio.gather(*tasks)
@@ -27,7 +27,7 @@ async def tag_all(message: types.Message) -> None:
 
 
 async def schedule(message: types.Message) -> None:
-    db_chat = await Chat.get(message.chat.id)
+    db_chat = db.query(Chat).get(message.chat.id)
     if db_chat is None:
         logging.error(f"Chat {message.chat.id} not found in database")
         return

@@ -1,11 +1,19 @@
-from .db import db
-from .chat import ChatRelatedModel
-from .user import UserRelatedModel
+from sqlalchemy import Column, Boolean, ForeignKey
+
+from .base import Base
+from .chat import Chat
+from .user import User
 
 
-class ChatMember(ChatRelatedModel, UserRelatedModel):
+class ChatMember(Base):  # type: ignore
     __tablename__ = "chat_members"
 
-    has_left = db.Column(db.Boolean)
-
-    _pk = db.PrimaryKeyConstraint("chat_id", "user_id", name="chat_member_pkey")
+    chat_id = Column(
+        ForeignKey(f"{Chat.__tablename__}.id", ondelete="CASCADE", onupdate="CASCADE"),
+        primary_key=True
+    )
+    user_id = Column(
+        ForeignKey(f"{User.__tablename__}.id", ondelete="CASCADE", onupdate="CASCADE"),
+        primary_key=True
+    )
+    has_left = Column(Boolean)
