@@ -1,26 +1,15 @@
-import logging
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from aiogram import Dispatcher
-from aiogram.utils.executor import Executor
-
+from config import POSTGRES_URI
+from .base import Base
 # import all the models so that Alembic could see them
 from .chat import Chat
 from .chat_member import ChatMember
-from .db import db
 from .user import User
 
-__all__ = ["db", "setup", "Chat", "ChatMember", "User"]
+__all__ = ["db", "Base", "Chat", "ChatMember", "User"]
 
-
-def setup(executor: Executor, postgres_uri: str) -> None:
-    async def on_startup(dispatcher: Dispatcher) -> None:
-        logging.getLogger("gino.engine").setLevel(logging.WARNING)
-        await db.set_bind(postgres_uri, echo=False)
-
-    async def on_shutdown(dispatcher: Dispatcher) -> None:
-        bind = db.pop_bind()
-        if bind:
-            await bind.close()
-
-    executor.on_startup(on_startup)
-    executor.on_shutdown(on_shutdown)
+engine = create_engine(POSTGRES_URI)
+Session = sessionmaker(bind=engine)
+db = Session()

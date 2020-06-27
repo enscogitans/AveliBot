@@ -1,14 +1,9 @@
-from .db import db
+from sqlalchemy import Column, Integer
+
+from .base import Base
 
 
-class User(db.Model):  # type: ignore
+class User(Base):  # type: ignore
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
-
-
-class UserRelatedModel(db.Model):  # type: ignore
-    user_id = db.Column(
-        db.ForeignKey(f"{User.__tablename__}.id", ondelete="CASCADE", onupdate="CASCADE"),
-        nullable=False,
-    )
+    id = Column(Integer, primary_key=True)

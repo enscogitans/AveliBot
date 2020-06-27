@@ -5,9 +5,6 @@ import typing as tp
 from aiogram import types
 from dateparser import search
 
-from models.chat import Chat
-from models.chat_member import ChatMember
-
 
 def search_dates(text: str, timezone: str) -> tp.List[datetime.datetime]:
     # RELATIVE_BASE: https://github.com/scrapinghub/dateparser/issues/403#issuecomment-589932965
@@ -37,9 +34,3 @@ def get_mention(user: types.User) -> str:
     if user.username:
         return f"@{user.username}"
     return user.get_mention()
-
-
-async def get_members(chat: Chat) -> tp.List[ChatMember]:
-    return await ChatMember.query \
-        .where(~ChatMember.has_left & (ChatMember.chat_id == chat.id)) \
-        .gino.all()

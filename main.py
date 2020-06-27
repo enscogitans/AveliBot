@@ -9,7 +9,6 @@ import config
 import filters
 import handlers
 import middlewares
-import models
 
 
 def setup_proxy() -> tp.Tuple[tp.Optional[str], tp.Optional[BasicAuth]]:
@@ -32,8 +31,6 @@ def setup() -> tp.Tuple[Dispatcher, Executor]:
     handlers.register(dp)
 
     executor = Executor(dp, skip_updates=True)
-    models.setup(executor, config.POSTGRES_URI)
-
     return dp, executor
 
 
