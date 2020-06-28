@@ -8,8 +8,8 @@ from aiohttp import BasicAuth
 import config
 import filters
 import handlers
+import message_scheduler
 import middlewares
-import models
 
 
 def setup_proxy() -> tp.Tuple[tp.Optional[str], tp.Optional[BasicAuth]]:
@@ -27,13 +27,12 @@ def setup() -> tp.Tuple[Dispatcher, Executor]:
     bot = Bot(token=config.TELEGRAM_TOKEN, proxy=proxy, proxy_auth=proxy_auth)
     dp = Dispatcher(bot)
 
+    message_scheduler.register(bot)
     filters.register(dp)
     middlewares.register(dp)
     handlers.register(dp)
 
     executor = Executor(dp, skip_updates=True)
-    models.setup(executor, config.POSTGRES_URI)
-
     return dp, executor
 
 

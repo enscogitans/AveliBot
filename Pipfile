@@ -15,8 +15,8 @@ alembic = "*"
 aveli-bot = {editable = true, path = "."}
 dateparser = "*"
 envparse = "*"
-gino = "*"
 psycopg2 = "*"
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.8"

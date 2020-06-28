@@ -5,15 +5,11 @@ import typing as tp
 from aiogram import types
 from dateparser import search
 
-from models.chat import Chat
-from models.chat_member import ChatMember
 
-
-def search_dates(text: str, timezone: str) -> tp.List[datetime.datetime]:
-    # RELATIVE_BASE: https://github.com/scrapinghub/dateparser/issues/403#issuecomment-589932965
+def search_dates(text: str, timezone: str, relative_base: datetime.datetime) -> tp.List[datetime.datetime]:
     settings = {
         "PREFER_DATES_FROM": "future",
-        "RELATIVE_BASE": datetime.datetime.now(),
+        "RELATIVE_BASE": relative_base,
         "TIMEZONE": timezone,
         "RETURN_AS_TIMEZONE_AWARE": True
     }
@@ -37,9 +33,3 @@ def get_mention(user: types.User) -> str:
     if user.username:
         return f"@{user.username}"
     return user.get_mention()
-
-
-async def get_members(chat: Chat) -> tp.List[ChatMember]:
-    return await ChatMember.query \
-        .where(~ChatMember.has_left & (ChatMember.chat_id == chat.id)) \
-        .gino.all()
