@@ -8,6 +8,12 @@ from models import db, ScheduledMessage
 from utils.utils import sleep_until
 
 
+def _del_from_db(chat_id: int, message_id: int) -> None:
+    sched_msg = db.query(ScheduledMessage).get({"chat_id": chat_id, "message_id": message_id})
+    db.delete(sched_msg)
+    db.commit()
+
+
 class MessageTask:
     def __init__(self, text: str, deadline: datetime, chat_id: int, message_id: int) -> None:
         self.text = text
@@ -21,17 +27,11 @@ class MessageTask:
         db.add(sched_msg)
         db.commit()
 
-    def del_from_db(self) -> None:
-        sched_msg = db.query(ScheduledMessage) \
-            .get({"chat_id": self.chat_id, "message_id": self.message_id})
-        db.delete(sched_msg)
-        db.commit()
-
     async def run(self, bot: Bot) -> None:
         await sleep_until(self.deadline)
         await bot.send_message(chat_id=self.chat_id, text=self.text,
                                reply_to_message_id=self.message_id)
-        self.del_from_db()
+        _del_from_db(self.chat_id, self.message_id)
 
 
 class MessageScheduler:
@@ -59,12 +59,11 @@ class MessageScheduler:
         message_task.save_to_db()
         self._add_to_loop(message_task)
 
-    def del_task(self, chat_id: int, message_id: int) -> None:
+    def del_task(self, chat_id: int, message_id: int) -> bool:
         task_id = (chat_id, message_id)
-        task = self.tasks[task_id]
-        task.cancel()
-
-        sched_msg = db.query(ScheduledMessage).get({"chat_id": chat_id,
-                                                    "message_id": message_id})
-        db.delete(sched_msg)
-        db.commit()
+        if task_id not in self.tasks:
+            return False
+        self.tasks[task_id].cancel()
+        del self.tasks[task_id]
+        _del_from_db(chat_id, message_id)
+        return True
