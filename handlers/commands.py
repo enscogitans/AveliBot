@@ -1,9 +1,11 @@
 import asyncio
+import datetime
 import logging
 
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Command, Regexp
 
+from message_scheduler import get_scheduler
 from models import db, Chat
 from utils import utils
 
@@ -32,15 +34,19 @@ async def schedule(message: types.Message) -> None:
         logging.error(f"Chat {message.chat.id} not found in database")
         return
 
-    dates = utils.search_dates(message.get_args(), db_chat.timezone)
+    dates = utils.search_dates(message.get_args(), db_chat.timezone, message.date)
     if not dates:
         await message.reply("Не могу найти дату :(")
         return
 
     deadline = dates[0]
+    if deadline < datetime.datetime.now(tz=datetime.timezone.utc):
+        await message.reply("Эта дата уже прошла!")
+        return
+
     await message.reply(f"Запланировано на {deadline.strftime('%d.%m.%y %H:%M:%S')}")
-    await utils.sleep_until(deadline)
-    await message.reply(message.get_args())
+    scheduler = get_scheduler()
+    scheduler.add_task(message.get_args(), message.chat.id, message.message_id, deadline)
 
 
 def register(dp: Dispatcher) -> None:

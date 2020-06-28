@@ -6,9 +6,10 @@ from .base import Base
 # import all the models so that Alembic could see them
 from .chat import Chat
 from .chat_member import ChatMember
+from .scheduled_message import ScheduledMessage
 from .user import User
 
-__all__ = ["db", "Base", "Chat", "ChatMember", "User"]
+__all__ = ["db", "Base", "Chat", "ChatMember", "ScheduledMessage", "User"]
 
 engine = create_engine(POSTGRES_URI)
 Session = sessionmaker(bind=engine)

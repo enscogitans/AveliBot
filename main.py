@@ -8,6 +8,7 @@ from aiohttp import BasicAuth
 import config
 import filters
 import handlers
+import message_scheduler
 import middlewares
 
 
@@ -26,6 +27,7 @@ def setup() -> tp.Tuple[Dispatcher, Executor]:
     bot = Bot(token=config.TELEGRAM_TOKEN, proxy=proxy, proxy_auth=proxy_auth)
     dp = Dispatcher(bot)
 
+    message_scheduler.register(bot)
     filters.register(dp)
     middlewares.register(dp)
     handlers.register(dp)

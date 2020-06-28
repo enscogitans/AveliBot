@@ -6,11 +6,10 @@ from aiogram import types
 from dateparser import search
 
 
-def search_dates(text: str, timezone: str) -> tp.List[datetime.datetime]:
-    # RELATIVE_BASE: https://github.com/scrapinghub/dateparser/issues/403#issuecomment-589932965
+def search_dates(text: str, timezone: str, relative_base: datetime.datetime) -> tp.List[datetime.datetime]:
     settings = {
         "PREFER_DATES_FROM": "future",
-        "RELATIVE_BASE": datetime.datetime.now(),
+        "RELATIVE_BASE": relative_base,
         "TIMEZONE": timezone,
         "RETURN_AS_TIMEZONE_AWARE": True
     }
