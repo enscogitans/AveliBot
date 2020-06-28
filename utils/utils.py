@@ -32,4 +32,4 @@ async def sleep_until(deadline: datetime.datetime) -> None:
 def get_mention(user: types.User) -> str:
     if user.username:
         return f"@{user.username}"
-    return user.get_mention()
+    return user.get_mention(as_html=True)

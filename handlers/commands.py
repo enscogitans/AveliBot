@@ -21,7 +21,7 @@ async def tag_all(message: types.Message) -> None:
     tags = [utils.get_mention(mem.user) for mem in members]
 
     if tags:
-        await message.answer(", ".join(tags), parse_mode="Markdown")
+        await message.answer(", ".join(tags), parse_mode="HTML")
     else:
         logging.error(f"No users found in chat {chat.id}")
 
