@@ -53,7 +53,8 @@ class MessageScheduler:
             )
             self._add_to_loop(message_task)
 
-    def add_task(self, text: str, chat_id: int, message_id: int, deadline: datetime) -> None:
+    def add_task(self, text: str, deadline: datetime,
+                 chat_id: int, message_id: int) -> None:
         message_task = MessageTask(text=text, chat_id=chat_id,
                                    message_id=message_id, deadline=deadline)
         message_task.save_to_db()

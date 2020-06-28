@@ -24,9 +24,9 @@ async def schedule(message: types.Message) -> None:
         await message.reply("Эта дата уже прошла!")
         return
 
-    await message.reply(f"Запланировано на {deadline.strftime('%d.%m.%y %H:%M:%S')}")
+    bot_message = await message.reply(f"Запланировано на {deadline.strftime('%d.%m.%y %H:%M:%S')}")
     scheduler = get_scheduler()
-    scheduler.add_task(message.get_args(), message.chat.id, message.message_id, deadline)
+    scheduler.add_task(message.get_args(), deadline, message.chat.id, bot_message.message_id)
 
 
 async def unschedule(message: types.Message) -> None:
