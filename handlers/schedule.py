@@ -26,7 +26,10 @@ async def schedule(message: types.Message) -> None:
 
     bot_message = await message.reply(f"Запланировано на {deadline.strftime('%d.%m.%y %H:%M:%S')}")
     scheduler = get_scheduler()
-    scheduler.add_task(message.get_args(), deadline, message.chat.id, bot_message.message_id)
+
+    command = message.get_command()
+    text = message.html_text.lstrip(command)
+    scheduler.add_task(text, deadline, message.chat.id, bot_message.message_id)
 
 
 async def unschedule(message: types.Message) -> None:

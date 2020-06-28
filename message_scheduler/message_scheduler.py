@@ -29,7 +29,7 @@ class MessageTask:
 
     async def run(self, bot: Bot) -> None:
         await sleep_until(self.deadline)
-        await bot.send_message(chat_id=self.chat_id, text=self.text)
+        await bot.send_message(chat_id=self.chat_id, text=self.text, parse_mode="HTML")
         _del_from_db(self.chat_id, self.message_id)
 
 
