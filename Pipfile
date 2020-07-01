@@ -10,6 +10,7 @@ flake8-quotes = "*"
 
 [packages]
 aiogram = "*"
+aiohttp = "*"
 aiohttp-socks = "*"
 alembic = "*"
 aveli-bot = {editable = true, path = "."}
