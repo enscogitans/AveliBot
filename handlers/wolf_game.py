@@ -139,14 +139,14 @@ async def wolf_stats(message: types.Message) -> None:
     names = await gather(*tasks)
 
     answer_lines = [
-                       "Топ <b>волчар</b> за всё время:",
-                       "",
-                   ] + [
-                       f"{i + 1}. {name} — {cnt} раз(а)" for i, (name, cnt) in enumerate(zip(names, win_counts))
-                   ] + [
-                       "",
-                       f"Всего розыгрышей — {sum(win_counts)}"
-                   ]
+        "Топ <b>волчар</b> за всё время:",
+        "",
+    ] + [
+        f"{i + 1}. {name} — {cnt} раз(а)" for i, (name, cnt) in enumerate(zip(names, win_counts))
+    ] + [
+        "",
+        f"Всего розыгрышей — {sum(win_counts)}"
+    ]
     await message.answer("\n".join(answer_lines), parse_mode="HTML")
 
 
