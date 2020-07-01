@@ -8,6 +8,6 @@ class Chat(Base):  # type: ignore
     __tablename__ = "chats"
 
     id = Column(BigInteger, primary_key=True)
-    timezone = Column(String, default="+0300")
+    timezone = Column(String, default="Europe/Moscow")
 
     members = relationship("ChatMember")
