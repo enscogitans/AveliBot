@@ -14,7 +14,7 @@ async def tag_all(message: types.Message) -> None:
     if db_chat is None:
         logging.error(f"Chat {chat.id} not found in database")
         return
-    known_members = db_chat.members
+    known_members = [mem for mem in db_chat.members if not mem.has_left]
 
     tasks = [chat.get_member(mem.user_id) for mem in known_members]
     members = await asyncio.gather(*tasks)
