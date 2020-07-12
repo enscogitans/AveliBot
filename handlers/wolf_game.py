@@ -6,10 +6,10 @@ from datetime import datetime
 from random import choice
 
 import pytz
-from aiogram import types, Dispatcher
-from sqlalchemy import func, desc
+from aiogram import Dispatcher, types
+from sqlalchemy import desc, func
 
-from models import db, Chat, WolfWinner, ChatMember
+from models import Chat, ChatMember, WolfWinner, db
 
 
 async def _get_user_name(chat: types.Chat, user_id: int, is_mention: bool = False) -> str:
@@ -31,7 +31,7 @@ async def _generate_game_messages(chat: types.Chat, winner_id: int) -> tp.List[s
         "Кто сегодня счастливчик?",
         "Зачем вы меня разбудили...",
         "Система взломана. Нанесён урон. Запущено планирование контрмер.",
-        "Опять в эти ваши игрульки играете? Ну ладно..."
+        "Опять в эти ваши игрульки играете? Ну ладно...",
         "### RUNNING 'VOLCHARA.SH'...",
     ]
     phrases_2 = [
