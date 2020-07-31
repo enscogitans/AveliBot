@@ -2,7 +2,7 @@ import asyncio
 import logging
 import typing as tp
 from asyncio import gather
-from datetime import datetime
+from datetime import datetime, timedelta
 from random import choice
 
 import pytz
@@ -90,7 +90,7 @@ async def wolf(message: types.Message) -> None:
         return
 
     tz = pytz.timezone(db_chat.timezone)
-    time = tz.fromutc(datetime.utcnow())
+    time = tz.fromutc(datetime.utcnow()) - timedelta(hours=5)  # Game restarts at 5 a.m.
     date = time.date()
 
     winner = db.query(WolfWinner).get({"chat_id": chat.id, "date": date})
