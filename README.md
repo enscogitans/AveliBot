@@ -6,7 +6,7 @@ It allows to tag all chat members, schedule messages to be sent later, and rando
 ## What can it do?
 * `/all` or simply `@all` &mdash; tag all chat members
 * `/schedule <time> <message>` &mdash; send `message` at moment `time`
-* `/unschedule` &mdash; cancel message from being sent later. The command must be a reply to bot's `/schedule` message confirmation.
+* `/unschedule` &mdash; cancel message from being sent later. The command must be a reply to bot's `/schedule` message confirmation
 * `/sched` &mdash; alias for `/schedule`
 * `/unsched` &mdash; alias for `/unschedule`
 * `/wolf` &mdash; find out who is the wolf of the day
