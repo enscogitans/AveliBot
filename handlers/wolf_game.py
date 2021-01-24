@@ -103,12 +103,12 @@ async def wolf(message: types.Message) -> None:
         )
         return
 
-    known_members = [mem for mem in db_chat.members if not mem.has_left]
-    if not known_members:
-        logging.error(f"No users found in chat {chat.id}")
+    known_players = [mem for mem in db_chat.members if not mem.has_left and mem.play_wolf_game]
+    if not known_players:
+        await message.answer("В этом чате пока ещё нет активных игроков!")
         return
 
-    winner_id = choice(known_members).user_id
+    winner_id = choice(known_players).user_id
     db.add(WolfWinner(chat_id=chat.id, date=date, user_id=winner_id))
     db.commit()
 
@@ -120,13 +120,17 @@ async def wolf(message: types.Message) -> None:
 
 
 async def wolf_stats(message: types.Message) -> None:
-    current_members = db.query(ChatMember.user_id) \
-        .filter((ChatMember.chat_id == message.chat.id) & ~ChatMember.has_left) \
-        .subquery()
+    current_players = db \
+        .query(ChatMember.user_id) \
+        .filter(
+            (ChatMember.chat_id == message.chat.id)
+            & ~ChatMember.has_left
+            & ChatMember.play_wolf_game
+        ).subquery()
     query = db \
         .query(WolfWinner.user_id, func.count(WolfWinner.date).label("cnt")) \
         .filter(WolfWinner.chat_id == message.chat.id) \
-        .join(current_members, WolfWinner.user_id == current_members.c.user_id) \
+        .join(current_players, WolfWinner.user_id == current_players.c.user_id) \
         .group_by(WolfWinner.user_id) \
         .order_by(desc("cnt")) \
         .all()
@@ -150,6 +154,19 @@ async def wolf_stats(message: types.Message) -> None:
     await message.answer("\n".join(answer_lines), parse_mode="HTML")
 
 
+async def change_player_status(message: types.Message, play_wolf_game: bool) -> None:
+    member = db.query(ChatMember).get({"chat_id": message.chat.id, "user_id": message.from_user.id})
+    if member is None:
+        logging.error(f"Member from chat {message.chat.id} with id {message.from_user.id} "
+                      f"is not found in database")
+        return
+    member.play_wolf_game = play_wolf_game
+    db.commit()
+
+    status = "играете" if play_wolf_game else "больше не играете"
+    await message.answer(f"Статус изменён: вы {status} в <b>волчару дня</b>", parse_mode="HTML")
+
+
 def register(dp: Dispatcher) -> None:
     dp.register_message_handler(wolf,
                                 types.ChatType.is_group_or_super_group,
@@ -158,4 +175,12 @@ def register(dp: Dispatcher) -> None:
     dp.register_message_handler(wolf_stats,
                                 types.ChatType.is_group_or_super_group,
                                 commands=["wolfstats"],
+                                is_user=True)
+    dp.register_message_handler(lambda msg: change_player_status(msg, play_wolf_game=True),
+                                types.ChatType.is_group_or_super_group,
+                                commands=["wolf_register"],
+                                is_user=True)
+    dp.register_message_handler(lambda msg: change_player_status(msg, play_wolf_game=False),
+                                types.ChatType.is_group_or_super_group,
+                                commands=["wolf_unregister"],
                                 is_user=True)

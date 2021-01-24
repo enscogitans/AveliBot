@@ -11,6 +11,8 @@ It allows to tag all chat members, schedule messages to be sent later, and rando
 * `/unsched` &mdash; alias for `/unschedule`
 * `/wolf` &mdash; find out who is the wolf of the day
 * `/wolfstats` &mdash; show wolf game stats
+* `/wolf_unregister` &mdash; stop playing wolf game
+* `/wolf_register` &mdash; resume playing wolf game (all users play the game by default)
 
 ## How to run this bot?
 1. `cp .env.example .env` 

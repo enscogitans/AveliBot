@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Boolean, ForeignKey
+from sqlalchemy import Boolean, Column, ForeignKey
 
 from .base import Base
 from .chat import Chat
@@ -17,3 +17,4 @@ class ChatMember(Base):  # type: ignore
         primary_key=True
     )
     has_left = Column(Boolean)
+    play_wolf_game = Column(Boolean, default=True)
