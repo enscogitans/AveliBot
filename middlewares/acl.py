@@ -3,7 +3,7 @@ import typing as tp
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
 
-from models import db, Chat, ChatMember, User
+from models import Chat, ChatMember, User, db
 
 
 class ACLMiddleware(BaseMiddleware):  # type: ignore
@@ -26,7 +26,7 @@ class ACLMiddleware(BaseMiddleware):  # type: ignore
         return db_user
 
     @staticmethod
-    def add_member(chat: types.Chat, user: types.User, has_left: bool) -> None:
+    def add_member(chat: types.Chat, user: types.User, has_left: bool) -> ChatMember:
         ACLMiddleware.add_chat(chat)
         ACLMiddleware.add_user(user)
         member = db.query(ChatMember).get({"chat_id": chat.id, "user_id": user.id})
