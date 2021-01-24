@@ -17,4 +17,4 @@ class ChatMember(Base):  # type: ignore
         primary_key=True
     )
     has_left = Column(Boolean)
-    play_wolf_game = Column(Boolean, default=True)
+    play_wolf_game = Column(Boolean, default=True, nullable=False)
