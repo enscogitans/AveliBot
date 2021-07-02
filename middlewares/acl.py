@@ -39,7 +39,7 @@ class ACLMiddleware(BaseMiddleware):  # type: ignore
         return member
 
     async def on_pre_process_message(self, message: types.Message, data: tp.Dict[tp.Any, tp.Any]) -> None:
-        if not types.ChatType.is_group_or_super_group(message):
+        if message.chat.type not in (types.ChatType.GROUP, types.ChatType.SUPERGROUP):
             return
 
         if not message.from_user.is_bot:

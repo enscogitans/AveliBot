@@ -169,18 +169,18 @@ async def change_player_status(message: types.Message, play_wolf_game: bool) -> 
 
 def register(dp: Dispatcher) -> None:
     dp.register_message_handler(wolf,
-                                types.ChatType.is_group_or_super_group,
-                                commands=["wolf"],
-                                is_user=True)
+                                is_user=True,
+                                is_group_or_supergroup=True,
+                                commands=["wolf"])
     dp.register_message_handler(wolf_stats,
-                                types.ChatType.is_group_or_super_group,
-                                commands=["wolfstats"],
-                                is_user=True)
+                                is_user=True,
+                                is_group_or_supergroup=True,
+                                commands=["wolfstats"])
     dp.register_message_handler(lambda msg: change_player_status(msg, play_wolf_game=True),
-                                types.ChatType.is_group_or_super_group,
-                                commands=["wolf_register"],
-                                is_user=True)
+                                is_user=True,
+                                is_group_or_supergroup=True,
+                                commands=["wolf_register"])
     dp.register_message_handler(lambda msg: change_player_status(msg, play_wolf_game=False),
-                                types.ChatType.is_group_or_super_group,
-                                commands=["wolf_unregister"],
-                                is_user=True)
+                                is_user=True,
+                                is_group_or_supergroup=True,
+                                commands=["wolf_unregister"])

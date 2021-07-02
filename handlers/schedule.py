@@ -1,10 +1,10 @@
 import datetime
 import logging
 
-from aiogram import types, Dispatcher
+from aiogram import Dispatcher, types
 
 from message_scheduler import get_scheduler
-from models import db, Chat
+from models import Chat, db
 from utils import utils
 
 
@@ -42,9 +42,11 @@ async def unschedule(message: types.Message) -> None:
 
 def register(dp: Dispatcher) -> None:
     dp.register_message_handler(schedule,
-                                types.ChatType.is_group_or_super_group,
-                                is_user=True, commands=["schedule", "sched"])
+                                is_user=True,
+                                is_group_or_supergroup=True,
+                                commands=["schedule", "sched"])
     dp.register_message_handler(unschedule,
-                                types.ChatType.is_group_or_super_group,
-                                is_user=True, is_reply=True,
+                                is_user=True,
+                                is_group_or_supergroup=True,
+                                is_reply=True,
                                 commands=["unschedule", "unsched"])

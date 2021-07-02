@@ -1,10 +1,10 @@
 import asyncio
 import logging
 
-from aiogram import types, Dispatcher
+from aiogram import Dispatcher, types
 from aiogram.dispatcher.filters import Command, Regexp
 
-from models import db, Chat
+from models import Chat, db
 from utils import utils
 
 
@@ -28,6 +28,5 @@ async def tag_all(message: types.Message) -> None:
 
 def register(dp: Dispatcher) -> None:
     dp.register_message_handler(tag_all,
-                                types.ChatType.is_group_or_super_group,
                                 Command(["all"]) | Regexp(r"\B@all\b"),
-                                is_user=True)
+                                is_user=True, is_group_or_supergroup=True)
