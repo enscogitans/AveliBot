@@ -1,13 +1,14 @@
-from sqlalchemy import Column, Integer, ForeignKey, TIMESTAMP, String
+from sqlalchemy import BigInteger, Column, ForeignKey, Integer, String, TIMESTAMP
 
 from .base import Base
 from .chat import Chat
 
 
-class ScheduledMessage(Base):  # type: ignore
+class ScheduledMessage(Base):
     __tablename__ = "scheduled_messages"
 
     chat_id = Column(
+        BigInteger,
         ForeignKey(f"{Chat.__tablename__}.id", ondelete="CASCADE", onupdate="CASCADE"),
         primary_key=True
     )

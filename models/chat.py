@@ -1,10 +1,14 @@
-from sqlalchemy import Column, BigInteger, String
+import typing
+
+from sqlalchemy import BigInteger, Column, String
 from sqlalchemy.orm import relationship
 
 from .base import Base
+if typing.TYPE_CHECKING:  # Required by mypy(sqlalchemy-stubs) to check relationship
+    from .chat_member import ChatMember  # noqa: F401
 
 
-class Chat(Base):  # type: ignore
+class Chat(Base):
     __tablename__ = "chats"
 
     id = Column(BigInteger, primary_key=True)
