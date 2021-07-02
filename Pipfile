@@ -13,7 +13,6 @@ aiogram = "*"
 aiohttp = "*"
 aiohttp-socks = "*"
 alembic = "*"
-aveli-bot = {editable = true, path = "."}
 dateparser = "*"
 envparse = "*"
 psycopg2 = "*"
