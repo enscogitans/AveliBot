@@ -1,4 +1,4 @@
-from envparse import env
+from envparse import env  # type: ignore
 
 TELEGRAM_TOKEN = env.str("TELEGRAM_TOKEN")
 
