@@ -10,7 +10,7 @@ import pytz
 from aiogram import Dispatcher, types
 from sqlalchemy import desc, func, orm
 
-from models import Chat, ChatMember, WolfWinner
+from src.models import Chat, ChatMember, WolfWinner
 
 
 async def _get_user_name(chat: types.Chat, user_id: int, is_mention: bool = False) -> str:

@@ -6,8 +6,8 @@ from aiogram import Dispatcher, types
 from aiogram.dispatcher.filters import Command, Regexp
 from sqlalchemy import orm
 
-from models import Chat
-from utils import utils
+from src.models import Chat
+from src import utils
 
 
 async def tag_all(session: orm.Session, message: types.Message) -> None:

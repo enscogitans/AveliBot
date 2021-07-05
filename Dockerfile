@@ -5,4 +5,4 @@ COPY . .
 
 RUN apt-get update && apt-get install -y pipenv && pipenv install --deploy --system
 
-CMD alembic upgrade head && python main.py
+CMD alembic upgrade head && python -m src

@@ -4,7 +4,7 @@ from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from sqlalchemy import orm
 
-from models import Chat, ChatMember, User
+from src.models import Chat, ChatMember, User
 
 
 class ACLMiddleware(BaseMiddleware):  # type: ignore

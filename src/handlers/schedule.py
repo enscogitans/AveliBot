@@ -7,8 +7,8 @@ import typing as tp
 from aiogram import Bot, Dispatcher, types
 from sqlalchemy import orm
 
-from models import Chat, ScheduledMessage
-from utils import utils
+from src.models import Chat, ScheduledMessage
+from src import utils
 
 
 def _del_from_db(session: orm.Session, chat_id: int, message_id: int) -> None:
@@ -18,7 +18,9 @@ def _del_from_db(session: orm.Session, chat_id: int, message_id: int) -> None:
 
 
 class _MessageTask:
-    def __init__(self, session: orm.Session, text: str, deadline: datetime, chat_id: int, message_id: int) -> None:
+    def __init__(self, session: orm.Session,
+                 text: str, deadline: datetime.datetime,
+                 chat_id: int, message_id: int) -> None:
         self.session = session
         self.text = text
         self.deadline = deadline
@@ -58,7 +60,7 @@ class _MessageScheduler:
             )
             self._add_to_loop(message_task)
 
-    def add_task(self, text: str, deadline: datetime,
+    def add_task(self, text: str, deadline: datetime.datetime,
                  chat_id: int, message_id: int) -> None:
         message_task = _MessageTask(session=self.session,
                                     text=text, chat_id=chat_id,

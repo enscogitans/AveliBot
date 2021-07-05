@@ -12,7 +12,7 @@ import sqlalchemy as sa
 # revision identifiers, used by Alembic.
 from sqlalchemy import orm
 
-from models import Chat
+import src.models
 
 revision = 'bff61ca896f3'
 down_revision = '668fbf83f0ce'
@@ -33,7 +33,7 @@ def upgrade():
 
     bind = op.get_bind()
     session = orm.Session(bind=bind)
-    for chat in session.query(Chat):
+    for chat in session.query(src.models.Chat):
         if chat.timezone == '+0300':
             chat.timezone = 'Europe/Moscow'
     session.commit()
@@ -44,7 +44,7 @@ def downgrade():
 
     bind = op.get_bind()
     session = orm.Session(bind=bind)
-    for chat in session.query(Chat):
+    for chat in session.query(src.models.Chat):
         if chat.timezone == 'Europe/Moscow':
             chat.timezone = '+0300'
     session.commit()
