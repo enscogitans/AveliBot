@@ -4,11 +4,11 @@ import typing as tp
 from aiogram import Bot, Dispatcher
 from aiogram.utils.executor import Executor
 from aiohttp import BasicAuth
+from sqlalchemy import create_engine, orm
 
 import config
 import filters
 import handlers
-import message_scheduler
 import middlewares
 
 
@@ -27,10 +27,12 @@ def setup() -> tp.Tuple[Dispatcher, Executor]:
     bot = Bot(token=config.TELEGRAM_TOKEN, proxy=proxy, proxy_auth=proxy_auth)
     dp = Dispatcher(bot)
 
-    message_scheduler.register(bot)
+    engine = create_engine(config.POSTGRES_URI)
+    session = orm.Session(engine)
+
     filters.register(dp)
-    middlewares.register(dp)
-    handlers.register(dp)
+    middlewares.register(dp, session)
+    handlers.register(dp, session)
 
     executor = Executor(dp, skip_updates=True)
     return dp, executor

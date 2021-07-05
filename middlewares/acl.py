@@ -2,40 +2,42 @@ import typing as tp
 
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
+from sqlalchemy import orm
 
-from models import Chat, ChatMember, User, db
+from models import Chat, ChatMember, User
 
 
 class ACLMiddleware(BaseMiddleware):  # type: ignore
-    @staticmethod
-    def add_chat(chat: types.Chat) -> Chat:
-        db_chat = db.query(Chat).get(chat.id)
+    def __init__(self, session: orm.Session):
+        super().__init__()
+        self.session = session
+
+    def add_chat(self, chat: types.Chat) -> Chat:
+        db_chat = self.session.query(Chat).get(chat.id)
         if db_chat is None:
             db_chat = Chat(id=chat.id)
-            db.add(db_chat)
-            db.commit()
+            self.session.add(db_chat)
+            self.session.commit()
         return db_chat
 
-    @staticmethod
-    def add_user(user: types.User) -> User:
-        db_user = db.query(User).get(user.id)
+    def add_user(self, user: types.User) -> User:
+        db_user = self.session.query(User).get(user.id)
         if db_user is None:
             db_user = User(id=user.id)
-            db.add(db_user)
-            db.commit()
+            self.session.add(db_user)
+            self.session.commit()
         return db_user
 
-    @staticmethod
-    def add_member(chat: types.Chat, user: types.User, has_left: bool) -> ChatMember:
-        ACLMiddleware.add_chat(chat)
-        ACLMiddleware.add_user(user)
-        member = db.query(ChatMember).get({"chat_id": chat.id, "user_id": user.id})
+    def add_member(self, chat: types.Chat, user: types.User, has_left: bool) -> ChatMember:
+        self.add_chat(chat)
+        self.add_user(user)
+        member = self.session.query(ChatMember).get({"chat_id": chat.id, "user_id": user.id})
         if member is not None:
             member.has_left = has_left
         else:
             member = ChatMember(chat_id=chat.id, user_id=user.id, has_left=has_left)
-            db.add(member)
-        db.commit()
+            self.session.add(member)
+        self.session.commit()
         return member
 
     async def on_pre_process_message(self, message: types.Message, data: tp.Dict[tp.Any, tp.Any]) -> None:
