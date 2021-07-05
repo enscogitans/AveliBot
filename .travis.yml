@@ -2,10 +2,8 @@ language: python
 python:
   - "3.8"
 install:
-  - pip install --upgrade pip
-  - pip install pipenv check-pipfile-lock
+  - pip install pipenv
+  - pipenv install --system --deploy --dev
 script:
-  - check-pipfile-lock
-  - pipenv install --system --dev
   - flake8
   - mypy .
