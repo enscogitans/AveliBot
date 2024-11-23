@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer
+from sqlalchemy import BigInteger, Column
 
 from .base import Base
 
@@ -6,4 +6,4 @@ from .base import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(BigInteger, primary_key=True)
